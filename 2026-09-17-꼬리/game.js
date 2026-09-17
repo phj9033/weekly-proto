@@ -4,7 +4,7 @@ import { createState, step, W, H, HEAD_R, SEG_R, BEAM_RANGE, BEAM_HALF_ANGLE, CA
 const SEEDS = [20260917, 7, 42, 303, 1981, 555];   // R 은 다음 시드 · Enter 는 같은 시드
 let seedIdx = 0;
 const canvas = document.getElementById('game');
-const { ctx } = Look.pixelCanvas(canvas, W, H, { maxWidth: innerWidth - 32, maxHeight: innerHeight - 96 });
+const { ctx, scale } = Look.pixelCanvas(canvas, W, H, { maxWidth: innerWidth - 32, maxHeight: innerHeight - 96 });
 const hud = document.getElementById('hud'), label = document.getElementById('label');
 const C = Look.colors;
 const BEST_KEY = 'weekly-proto-tail-best';
@@ -42,6 +42,7 @@ function drawTri(x, y, ang, r, color) {
   ctx.closePath(); ctx.fill();
 }
 function draw() {
+  ctx.setTransform(scale, 0, 0, scale, 0, 0); ctx.imageSmoothingEnabled = false;   // 컨텍스트가 유실·복구되면 변환이 초기화된다 — 매 프레임 다시 건다
   const s = state, h = s.head;
   Look.trail(ctx, W, H, 0.45, C.walnut);                    // 잔상
   // 장애물
