@@ -1,0 +1,22 @@
+/* 이번 주 프로토 — 룩 공유 케이스. 값의 정본은 ChannelOps2 channel.yaml brand.* 다. 여기엔 복사본만 둔다. */
+@font-face { font-family: 'Galmuri11'; src: url('fonts/Galmuri11.ttf'); }
+@font-face { font-family: 'Pretendard'; src: url('fonts/Pretendard-SemiBold.otf'); }
+
+:root {
+  --cream: #F0E7D8; --ink: #0E0A08; --amber: #E6B422; --walnut: #241811;
+  --brass: #8C7D5C; --night: #1A162E; --rust: #C6563A;
+  --px: 12px;                 /* 픽셀 폰트 격자. 크기는 이 배수만 */
+}
+
+html, body { margin: 0; height: 100%; background: var(--night); color: var(--cream);
+  font-family: 'Pretendard', sans-serif; }
+.stage { position: relative; display: grid; place-items: center; height: 100%; }
+canvas.pixel { image-rendering: pixelated; image-rendering: crisp-edges; background: var(--walnut);
+  outline: 2px solid var(--ink); }
+.vignette { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(14,10,8,.55) 100%); }
+.hud { position: absolute; left: 16px; top: 12px; font-family: 'Galmuri11', monospace;
+  font-size: calc(var(--px) * 2); line-height: calc(var(--px) * 2); color: var(--amber);
+  -webkit-font-smoothing: none; text-shadow: 2px 2px 0 var(--ink); }
+.hud.fail { color: var(--rust); }
+.label { position: absolute; left: 16px; bottom: 12px; font-size: 14px; color: var(--brass); }
