@@ -1,4 +1,4 @@
-// 이번 주 프로토 — 룩 공유 케이스(JS). 브라우저 전역 Look. 값의 정본은 channel.yaml brand.colors.
+// 이번 주 프로토타입 — 룩 공유 케이스(JS). 브라우저 전역 Look. 값의 정본은 channel.yaml brand.colors.
 const Look = {
   colors: { cream: '#F0E7D8', ink: '#0E0A08', amber: '#E6B422', walnut: '#241811',
             brass: '#8C7D5C', night: '#1A162E', rust: '#C6563A' },

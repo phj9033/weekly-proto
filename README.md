@@ -1,4 +1,4 @@
-# Weekly Proto · 이번 주 프로토
+# Weekly Prototype · 이번 주 프로토타입
 
 매주 기획 도구가 1등으로 뽑은 게임 기획을 그대로 웹 프로토로 만들고, 직접 플레이한 판정을 영상으로 남깁니다.
 채널: [퇴근 후 게임 실험실](https://www.youtube.com/@hwi.gamelab)
