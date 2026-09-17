@@ -14,16 +14,19 @@ const saveBest = v => { try { if (v > best()) localStorage.setItem(BEST_KEY, Str
 let state = createState(SEEDS[seedIdx]);
 let paused = false, lastTs = 0;
 const keys = new Set();
-const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right', z: 'beam', Z: 'beam', x: 'fire', X: 'fire', c: 'detach', C: 'detach' };
+// 물리 키 코드로 읽는다 — 한글 입력 상태면 e.key 가 ㅋ·ㅌ·ㅊ 로 들어와 Z·X·C 가 죽는다 [실측 2026-09-17]
+const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', KeyW: 'up', KeyS: 'down', KeyA: 'left', KeyD: 'right', KeyZ: 'beam', KeyX: 'fire', KeyC: 'detach' };
+let started = false;                                   // 첫 키 전엔 판이 돌지 않는다(READY)
 
 addEventListener('keydown', e => {
-  if (e.key in KEYMAP) { keys.add(KEYMAP[e.key]); e.preventDefault(); }
-  if (e.key === 'Escape') paused = !paused;
-  if (e.key === 'Enter' && state.over) { state = createState(state.seed); }
-  if (e.key === 'r' || e.key === 'R') { seedIdx = (seedIdx + 1) % SEEDS.length; state = createState(SEEDS[seedIdx]); }
-  if (e.key === 'l' || e.key === 'L') downloadLog();
+  if (e.code in KEYMAP) { keys.add(KEYMAP[e.code]); e.preventDefault(); started = true; }
+  if (e.code === 'Escape') paused = !paused;
+  if (e.code === 'Enter' && state.over) { state = createState(state.seed); started = false; }
+  if (e.code === 'KeyR') { seedIdx = (seedIdx + 1) % SEEDS.length; state = createState(SEEDS[seedIdx]); started = false; }
+  if (e.code === 'KeyL') downloadLog();
 });
-addEventListener('keyup', e => { if (e.key in KEYMAP) keys.delete(KEYMAP[e.key]); });
+addEventListener('keyup', e => { if (e.code in KEYMAP) keys.delete(KEYMAP[e.code]); });
+canvas.addEventListener('pointerdown', () => { canvas.focus(); });
 addEventListener('blur', () => keys.clear());
 
 function downloadLog() {
@@ -84,6 +87,7 @@ function draw() {
     ctx.fillStyle = C.brass; ctx.fillText(`BEST ${best()}   ENTER same seed   R next seed`, W / 2, 100);
     ctx.textAlign = 'left';
   }
+  if (!started && !s.over) { ctx.fillStyle = C.cream; ctx.font = '8px Galmuri11'; ctx.textAlign = 'center'; ctx.fillText('READY · PRESS ANY KEY', W / 2, H / 2 - 4); ctx.textAlign = 'left'; }
   if (paused && !s.over) { ctx.fillStyle = C.cream; ctx.font = '8px Galmuri11'; ctx.textAlign = 'center'; ctx.fillText('PAUSED · ESC', W / 2, H / 2 - 4); ctx.textAlign = 'left'; }
   const left = Math.max(0, ROUND_S - s.t);
   hud.textContent = `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, '0')}  TAIL ${s.tail.length}  KILL ${s.kills}  SEED ${seedIdx + 1}/${SEEDS.length}`;
@@ -92,7 +96,7 @@ function draw() {
 
 function frame(ts) {
   const dt = Math.min(0.05, (ts - lastTs) / 1000 || 0); lastTs = ts;
-  if (!paused) { const wasOver = state.over; step(state, input(), dt); if (!wasOver && state.over) saveBest(state.score); }
+  if (!paused && started) { const wasOver = state.over; step(state, input(), dt); if (!wasOver && state.over) saveBest(state.score); }
   draw(); requestAnimationFrame(frame);
 }
 label.textContent = '←→↑↓ 이동 · Z 누르고 있기 = 붙잡기(이동 절반) · X 부수기 · C 꼬리 끝 떼기 · ESC 멈춤 · L 판 로그 저장';
