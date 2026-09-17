@@ -1,3 +1,5 @@
+
+(() => {   // 일반 스크립트끼리 전역 이름이 겹치지 않게 함수 스코프로 감싼다
 const { createState, step } = Rules;              // rules.js 가 먼저 로드된다(일반 스크립트)
 const W = 180, H = 120;                       // 논리 해상도. 정수배로 키운다
 const { ctx, scale } = Look.pixelCanvas(document.getElementById('game'), W, H);
@@ -17,3 +19,4 @@ function frame() {
   requestAnimationFrame(frame);
 }
 frame();
+})();

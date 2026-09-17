@@ -1,6 +1,6 @@
 // 「꼬리」 — 규칙만. DOM 없음. 일반 스크립트(전역 TailRules) — file:// 로 열어도 돌아야 해서 ES 모듈을 쓰지 않는다. 기획 정본: work/hwi.gamelab/planlab/2026-09-17-01/report.json (id: tail)
 // 붙잡은 적이 내 뒤에 마디로 붙어 옆으로 쏘고 대신 맞는다. 몸집이 늘어 통로가 좁아진다. 몇 마디까지 키울지가 판이다.
-
+(() => {   // 일반 스크립트끼리 전역 이름이 겹치지 않게 함수 스코프로 감싼다
 const W = 320, H = 180;                 // 논리 해상도(16:9)
 const ROUND_S = 90;
 const HEAD_R = 4, SEG_R = 3.5, SEG_GAP = 8;
@@ -193,3 +193,4 @@ function step(s, input, dt) {
 
 const TailRules = { W, ROUND_S, HEAD_R, HEAD_SPEED, SEG_SPEED, BEAM_RANGE, CAPTURE_S, SEG_HP, FIRE_CD, TEAR_DIST, OBSTACLES, rng, createState, hitsObstacle, spawnEnemy, waveParams, fire, detach, step, H, SEG_R, SEG_GAP, BEAM_HALF_ANGLE, BULLET_SPEED, ENEMY_BULLET_SPEED, TEAR_S };
 if (typeof globalThis !== 'undefined') globalThis.TailRules = TailRules;
+})();

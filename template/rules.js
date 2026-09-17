@@ -1,4 +1,5 @@
 // 규칙만. DOM 없음. 일반 스크립트(전역 Rules) — file:// 로 열어도 돌아야 해서 ES 모듈을 쓰지 않는다. node --test 는 파일을 읽어 평가한다.
+(() => {   // 일반 스크립트끼리 전역 이름이 겹치지 않게 함수 스코프로 감싼다
 function createState() { return { x: 87, y: 100, t: 0, over: false }; }
 function step(s, input, dt) {
   if (s.over) return s;
@@ -8,3 +9,4 @@ function step(s, input, dt) {
 }
 const Rules = { createState, step };
 if (typeof globalThis !== 'undefined') globalThis.Rules = Rules;
+})();

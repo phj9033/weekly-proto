@@ -1,4 +1,5 @@
 // 「꼬리」 — 그리기·입력만. 규칙은 rules.js. 룩은 ../look/look.js (전역 Look).
+(() => {   // 일반 스크립트끼리 전역 이름이 겹치지 않게 함수 스코프로 감싼다
 const { createState, step, W, H, HEAD_R, SEG_R, BEAM_RANGE, BEAM_HALF_ANGLE, CAPTURE_S, OBSTACLES, ROUND_S } = TailRules;   // rules.js 가 먼저 로드된다(일반 스크립트)
 
 const SEEDS = [20260917, 7, 42, 303, 1981, 555];   // R 은 다음 시드 · Enter 는 같은 시드
@@ -101,3 +102,4 @@ function frame(ts) {
 }
 label.textContent = '←→↑↓ 이동 · Z 누르고 있기 = 붙잡기(이동 절반) · X 부수기 · C 꼬리 끝 떼기 · ESC 멈춤 · L 판 로그 저장';
 requestAnimationFrame(frame);
+})();

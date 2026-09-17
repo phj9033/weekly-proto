@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-const { createState, step } = new Function(`${readFileSync(new URL('../rules.js', import.meta.url), 'utf8')}; return Rules;`)();
+const { createState, step } = new Function(`${readFileSync(new URL('../rules.js', import.meta.url), 'utf8')}; return globalThis.Rules;`)();
 
 test('시작 상태', () => { const s = createState(); assert.equal(s.over, false); assert.equal(s.t, 0); });
 test('오른쪽 입력이면 x 가 는다', () => { assert.ok(step(createState(), { right: true }, 0.1).x > 87); });
