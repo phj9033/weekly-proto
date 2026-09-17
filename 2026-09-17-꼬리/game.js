@@ -100,6 +100,8 @@ function frame(ts) {
   if (!paused && started) { const wasOver = state.over; step(state, input(), dt); if (!wasOver && state.over) saveBest(state.score); }
   draw(); requestAnimationFrame(frame);
 }
+// 캡처·자기시험용 읽기 전용 훅 — 게임 규칙에는 영향이 없다
+window.__tail = { state: () => state, seedIdx: () => seedIdx, started: () => started, W, H };
 label.textContent = '←→↑↓ 이동 · Z 누르고 있기 = 붙잡기(이동 절반) · X 부수기 · C 꼬리 끝 떼기 · ESC 멈춤 · L 판 로그 저장';
 requestAnimationFrame(frame);
 })();
