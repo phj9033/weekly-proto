@@ -16,5 +16,5 @@
 - 30초마다 등장이 빨라지고 60초부터 큰 적. 90초 생존이면 끝. 점수 = 처치 + 끝날 때 꼬리 길이 × 5
 
 ## 실행·검증
-리포 루트에서 `python3 -m http.server 8000` → `http://localhost:8000/2026-09-17-꼬리/`
+`index.html` 을 그대로 열어도 된다(모듈 없음 · file:// 가능). 서버로 볼 때는 리포 루트에서 `python3 -m http.server 8000` → `http://localhost:8000/2026-09-17-꼬리/`
 `node --test tests/rules.test.mjs` — 규칙 자기시험 14항목

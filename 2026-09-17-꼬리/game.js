@@ -1,5 +1,5 @@
-// 「꼬리」 — 그리기·입력만. 규칙은 rules.mjs. 룩은 ../look/look.js (전역 Look).
-import { createState, step, W, H, HEAD_R, SEG_R, BEAM_RANGE, BEAM_HALF_ANGLE, CAPTURE_S, OBSTACLES, ROUND_S } from './rules.mjs';
+// 「꼬리」 — 그리기·입력만. 규칙은 rules.js. 룩은 ../look/look.js (전역 Look).
+const { createState, step, W, H, HEAD_R, SEG_R, BEAM_RANGE, BEAM_HALF_ANGLE, CAPTURE_S, OBSTACLES, ROUND_S } = TailRules;   // rules.js 가 먼저 로드된다(일반 스크립트)
 
 const SEEDS = [20260917, 7, 42, 303, 1981, 555];   // R 은 다음 시드 · Enter 는 같은 시드
 let seedIdx = 0;

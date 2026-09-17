@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createState, step, fire, detach, spawnEnemy, waveParams, hitsObstacle, CAPTURE_S, ROUND_S, HEAD_SPEED, W, H } from '../rules.mjs';
+import { readFileSync } from 'node:fs';
+// 일반 스크립트를 노드에서 평가한다(file:// 지원을 위해 모듈이 아니다)
+const TailRules = new Function(`${readFileSync(new URL('../rules.js', import.meta.url), 'utf8')}; return TailRules;`)();
+const { createState, step, fire, detach, spawnEnemy, waveParams, hitsObstacle, CAPTURE_S, ROUND_S, HEAD_SPEED, W, H } = TailRules;
 
 const NONE = {};
 const run = (s, input, secs, dt = 1 / 60) => { for (let i = 0; i < Math.round(secs / dt); i++) step(s, input, dt); return s; };

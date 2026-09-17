@@ -1,4 +1,4 @@
-import { createState, step } from './rules.mjs';
+const { createState, step } = Rules;              // rules.js 가 먼저 로드된다(일반 스크립트)
 const W = 180, H = 120;                       // 논리 해상도. 정수배로 키운다
 const { ctx, scale } = Look.pixelCanvas(document.getElementById('game'), W, H);
 const hud = document.getElementById('hud');

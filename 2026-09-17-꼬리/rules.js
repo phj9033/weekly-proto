@@ -1,29 +1,29 @@
-// 「꼬리」 — 규칙만. DOM 없음. 기획 정본: work/hwi.gamelab/planlab/2026-09-17-01/report.json (id: tail)
+// 「꼬리」 — 규칙만. DOM 없음. 일반 스크립트(전역 TailRules) — file:// 로 열어도 돌아야 해서 ES 모듈을 쓰지 않는다. 기획 정본: work/hwi.gamelab/planlab/2026-09-17-01/report.json (id: tail)
 // 붙잡은 적이 내 뒤에 마디로 붙어 옆으로 쏘고 대신 맞는다. 몸집이 늘어 통로가 좁아진다. 몇 마디까지 키울지가 판이다.
 
-export const W = 320, H = 180;                 // 논리 해상도(16:9)
-export const ROUND_S = 90;
-export const HEAD_R = 4, SEG_R = 3.5, SEG_GAP = 8;
-export const HEAD_SPEED = 70;                  // px/s · Z 누르는 동안 절반
-export const SEG_SPEED = 110;                  // 마디가 앞을 따라붙는 최고 속도 — 머리보다 빠르지만 순간이동은 아니다
-export const BEAM_RANGE = 60, BEAM_HALF_ANGLE = Math.PI / 5;   // 부채꼴 ±36°
-export const CAPTURE_S = { fast: 0.8, big: 1.5, neutral: 0.4 };
-export const SEG_HP = { fast: 1, big: 2, neutral: 1 };
-export const FIRE_CD = 0.25, BULLET_SPEED = 160, ENEMY_BULLET_SPEED = 70;
-export const TEAR_DIST = SEG_GAP * 3, TEAR_S = 0.5;   // 마디가 벽에 걸려 이만큼 떨어져 이만큼 버티면 떨어진다
-export const OBSTACLES = [                     // 통로 폭: 가운데 세로 둘 사이 = 40px(꼬리 4~5 마디부터 걸린다)
+const W = 320, H = 180;                 // 논리 해상도(16:9)
+const ROUND_S = 90;
+const HEAD_R = 4, SEG_R = 3.5, SEG_GAP = 8;
+const HEAD_SPEED = 70;                  // px/s · Z 누르는 동안 절반
+const SEG_SPEED = 110;                  // 마디가 앞을 따라붙는 최고 속도 — 머리보다 빠르지만 순간이동은 아니다
+const BEAM_RANGE = 60, BEAM_HALF_ANGLE = Math.PI / 5;   // 부채꼴 ±36°
+const CAPTURE_S = { fast: 0.8, big: 1.5, neutral: 0.4 };
+const SEG_HP = { fast: 1, big: 2, neutral: 1 };
+const FIRE_CD = 0.25, BULLET_SPEED = 160, ENEMY_BULLET_SPEED = 70;
+const TEAR_DIST = SEG_GAP * 3, TEAR_S = 0.5;   // 마디가 벽에 걸려 이만큼 떨어져 이만큼 버티면 떨어진다
+const OBSTACLES = [                     // 통로 폭: 가운데 세로 둘 사이 = 40px(꼬리 4~5 마디부터 걸린다)
   { x: 60, y: 30, w: 24, h: 52 },
   { x: 236, y: 98, w: 24, h: 52 },
   { x: 140, y: 78, w: 40, h: 12 },
 ];
 
 // 시드 난수 — 같은 시드 = 같은 등장. mulberry32
-export function rng(seed) {
+function rng(seed) {
   let a = seed >>> 0;
   return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }
 
-export function createState(seed = 1) {
+function createState(seed = 1) {
   return {
     seed, rand: rng(seed), t: 0, over: false, ended: false, score: 0, kills: 0,
     head: { x: W / 2, y: H / 2 + 50, ang: -Math.PI / 2 },   // 가운데 막대(y 78~90) 아래 열린 곳
@@ -38,7 +38,7 @@ export function createState(seed = 1) {
 
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-export function hitsObstacle(x, y, r) {
+function hitsObstacle(x, y, r) {
   return OBSTACLES.some(o => x + r > o.x && x - r < o.x + o.w && y + r > o.y && y - r < o.y + o.h);
 }
 function moveBlocked(p, dx, dy, r) {           // 축별로 미끄러진다
@@ -53,19 +53,19 @@ function inCone(head, e) {
   return Math.abs(a) <= BEAM_HALF_ANGLE;
 }
 
-export function spawnEnemy(s, kind) {
+function spawnEnemy(s, kind) {
   const side = Math.floor(s.rand() * 4), u = s.rand();
   const pos = [{ x: u * W, y: -6 }, { x: W + 6, y: u * H }, { x: u * W, y: H + 6 }, { x: -6, y: u * H }][side];
   const e = { id: s.nextId++, kind, hp: kind === 'big' ? 3 : 1, fireCd: 1.2 + s.rand(), vx: 0, vy: 0, ...pos };
   s.enemies.push(e); return e;
 }
 /** 파도: 30초마다 등장 간격이 줄고 빠른 적 비율이 오른다. 60초부터 큰 적. */
-export function waveParams(t) {
+function waveParams(t) {
   const stage = Math.min(2, Math.floor(t / 30));
   return { interval: [2.2, 1.6, 1.1][stage], bigChance: t >= 60 ? 0.35 : 0 };
 }
 
-export function fire(s) {
+function fire(s) {
   if (s.fireCd > 0 || s.over) return 0;
   s.fireCd = FIRE_CD;
   const h = s.head;
@@ -78,7 +78,7 @@ export function fire(s) {
   return 1 + s.tail.length;
 }
 
-export function detach(s) {                    // C: 끝 마디를 떼어 중립 표류체로
+function detach(s) {                    // C: 끝 마디를 떼어 중립 표류체로
   if (!s.tail.length || s.over) return null;
   const seg = s.tail.pop();
   const e = { id: s.nextId++, kind: 'neutral', hp: 1, fireCd: Infinity, vx: (s.rand() - .5) * 10, vy: (s.rand() - .5) * 10, x: seg.x, y: seg.y };
@@ -107,7 +107,7 @@ function endRound(s, why) {
 }
 
 /** input: {up,down,left,right,beam,fire,detach}. dt 초. */
-export function step(s, input, dt) {
+function step(s, input, dt) {
   if (s.over) return s;
   s.t += dt; s.fireCd = Math.max(0, s.fireCd - dt);
   const h = s.head;
@@ -190,3 +190,6 @@ export function step(s, input, dt) {
   if (!s.over && s.t >= ROUND_S) { s.ended = true; endRound(s, 'time'); }
   return s;
 }
+
+const TailRules = { W, ROUND_S, HEAD_R, HEAD_SPEED, SEG_SPEED, BEAM_RANGE, CAPTURE_S, SEG_HP, FIRE_CD, TEAR_DIST, OBSTACLES, rng, createState, hitsObstacle, spawnEnemy, waveParams, fire, detach, step, H, SEG_R, SEG_GAP, BEAM_HALF_ANGLE, BULLET_SPEED, ENEMY_BULLET_SPEED, TEAR_S };
+if (typeof globalThis !== 'undefined') globalThis.TailRules = TailRules;
